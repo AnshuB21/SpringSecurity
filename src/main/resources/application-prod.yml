@@ -1,0 +1,6 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://prod-server:5432/prod_db
+  jpa:
+    hibernate:
+      ddl-auto: validate

@@ -1,0 +1,27 @@
+#We create different configuration files (like application-dev.yml, application-qa.yml,
+#and application-prod.yml) because our application needs different settings depending on the environment it
+#runs in. In development, we may use a local database, enable debug logging, and allow automatic schema updates,
+#while in testing (QA) we use a separate database and more controlled settings, and in production we use a
+#secure remote database, stricter logging levels, and disable automatic schema changes to protect data.
+#Spring Boot Profiles allow us to switch between these environments easily so the same application code can
+#behave differently and safely depending on where it is deployed.
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:1838/Auth
+    username: postgres
+    password: "@nu&Anshi123"
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.tool.schema: DEBUG
