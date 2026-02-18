@@ -4,16 +4,28 @@ import com.Auth.auth_app.Respository.UserRepository;
 import com.Auth.auth_app.dtos.UserDto;
 import com.Auth.auth_app.entity.Provider;
 import com.Auth.auth_app.entity.User;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
-@RequiredArgsConstructor
+
 public class UserServiceImplementation implements UserService{
 
+
     private final UserRepository userRepository;
+
     private final ModelMapper modelMapper;
+
+    public UserServiceImplementation(UserRepository userRepository, ModelMapper modelMapper) {
+        this.userRepository = userRepository;
+        this.modelMapper = modelMapper;
+    }
+
     @Override
     public UserDto createUser(UserDto userDto) {
         if(userDto.getEmail()==null || userDto.getEmail().isBlank()) {
@@ -56,6 +68,14 @@ public class UserServiceImplementation implements UserService{
 
     @Override
     public Iterable<UserDto> getAllUsers() {
-        return null;
+        if (userRepository.count() <= 0) {
+            throw new IllegalStateException("No user present");
+        }
+
+        return userRepository.findAll()
+                .stream()
+                .map(user -> modelMapper.map(user, UserDto.class))
+                .toList();
     }
+
 }
