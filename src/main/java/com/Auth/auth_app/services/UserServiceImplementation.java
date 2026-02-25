@@ -4,16 +4,20 @@ import com.Auth.auth_app.Respository.UserRepository;
 import com.Auth.auth_app.dtos.UserDto;
 import com.Auth.auth_app.entity.Provider;
 import com.Auth.auth_app.entity.User;
+import com.Auth.auth_app.exceptions.ResourceNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.internal.bytebuddy.asm.Advice;
+import org.modelmapper.internal.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-
+@RequiredArgsConstructor
 public class UserServiceImplementation implements UserService{
 
 
@@ -21,11 +25,7 @@ public class UserServiceImplementation implements UserService{
 
     private final ModelMapper modelMapper;
 
-    public UserServiceImplementation(UserRepository userRepository, ModelMapper modelMapper) {
-        this.userRepository = userRepository;
-        this.modelMapper = modelMapper;
-    }
-
+    @Transactional
     @Override
     public UserDto createUser(UserDto userDto) {
         if(userDto.getEmail()==null || userDto.getEmail().isBlank()) {
@@ -47,8 +47,15 @@ public class UserServiceImplementation implements UserService{
     }
 
     @Override
-    public UserDto getUserByEMail(String email) {
-        return null;
+    public UserDto getUserByEmail(String email) {
+
+        User user = userRepository.findByEmail(email);
+
+        if (user == null) {
+            throw new ResourceNotFoundException("User not found with email: " + email);
+        }
+
+        return modelMapper.map(user, UserDto.class);
     }
 
     @Override
@@ -65,7 +72,7 @@ public class UserServiceImplementation implements UserService{
     public UserDto getUserById(String userId) {
         return null;
     }
-
+   // @Transactional(Readonly == true)
     @Override
     public Iterable<UserDto> getAllUsers() {
         if (userRepository.count() <= 0) {

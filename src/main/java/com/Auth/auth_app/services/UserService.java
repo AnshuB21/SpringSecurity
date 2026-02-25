@@ -8,7 +8,7 @@ public interface UserService  {
     UserDto createUser(UserDto userDto);
 
     //get User by email
-    UserDto getUserByEMail (String email);
+    UserDto getUserByEmail (String email);
     //update user
   UserDto updateUser (UserDto userDto, String userId);
 
