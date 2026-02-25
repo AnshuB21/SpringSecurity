@@ -1,6 +1,7 @@
 package com.Auth.auth_app.controller;
 
 
+import com.Auth.auth_app.Respository.UserRepository;
 import com.Auth.auth_app.dtos.UserDto;
 import com.Auth.auth_app.services.UserService;
 import lombok.AllArgsConstructor;
@@ -15,9 +16,13 @@ import java.util.List;
 //@AllArgsConstructor
 public class UserController {
        private final UserService userService;
-       //Manually created the constructor because the lombok was throwing error
-    public UserController(UserService userService) {
+    private final UserRepository userRepository;
+
+    //Manually created the constructor because the lombok was throwing error
+    public UserController(UserService userService,
+                          UserRepository userRepository) {
         this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     //Method to post user into the table
@@ -42,4 +47,17 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.FOUND).body(userService.getUserByEmail(email));
     }
 
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserDto> getUserById(@PathVariable("userId")String userId){
+        return ResponseEntity.ok(userService.getUserById(userId));
+    }
+    @PutMapping("/update/{userId}")
+    public ResponseEntity<UserDto> updateUser (@RequestBody UserDto userDto, @PathVariable String userId){
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(userService.updateUser(userDto,userId));
+    }
+
+    @DeleteMapping("/{userId}")
+    public void deleteUser (@PathVariable String userId){
+        userService.deleteUser(userId);
+    }
 }
