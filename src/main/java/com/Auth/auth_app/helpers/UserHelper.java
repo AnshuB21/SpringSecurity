@@ -9,3 +9,24 @@ public class UserHelper {
         return UUID.fromString(uuid);
     }
 }
+/* HTTP methods
+status codes
+DTOs
+validation
+pagination
+filtering
+API versioning
+/////////////
+RestTemplate
+WebClient
+OpenFeign
+///////////////////////
+what containers are
+Dockerfile
+running apps in Docker
+//////////////////////////////
+API Gateway
+Service Discovery
+Centralized Config
+Load balancing
+*/
